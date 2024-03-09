@@ -81,3 +81,10 @@ int savePlaneToFile(FILE* f, Plane* pPlane)
 		return 0;
 	return 1;
 }
+
+int readPlaneFromFile(FILE* f, Plane* pPlane)
+{
+	if (fread(&pPlane, sizeof(Plane), 1, f) != 1)
+		return 0;
+	return 1;
+}

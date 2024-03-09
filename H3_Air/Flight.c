@@ -72,7 +72,7 @@ Airport* setAiportToFlight(const AirportManager* pManager, const char* msg)
 	return port;
 }
 
-void* compareFlightBySourceCode(const void* pF1, const void* pF2)
+int compareFlightBySourceCode(const void* pF1, const void* pF2)
 {
 	const Flight* f1 = *(const Flight**)pF1;
 	const Flight* f2 = *(const Flight**)pF2;
@@ -80,7 +80,7 @@ void* compareFlightBySourceCode(const void* pF1, const void* pF2)
 	return strcmp(f1->sourceCode, f2->sourceCode);
 }
 
-void* compareFlightByDestCode(const void* pF1, const void* pF2)
+int compareFlightByDestCode(const void* pF1, const void* pF2)
 {
 	const Flight* f1 = *(const Flight**)pF1;
 	const Flight* f2 = *(const Flight**)pF2;
@@ -88,7 +88,7 @@ void* compareFlightByDestCode(const void* pF1, const void* pF2)
 	return strcmp(f1->destCode, f2->destCode);
 }
 
-void* compareFlightByDate(const void* pF1, const void* pF2)
+int compareFlightByDate(const void* pF1, const void* pF2)
 {
 	const Flight* f1 = *(const Flight**)pF1;
 	const Flight* f2 = *(const Flight**)pF2;
@@ -108,7 +108,7 @@ void* compareFlightByDate(const void* pF1, const void* pF2)
 
 int saveFlightToFile(FILE* f, Flight* pFlight)
 {
-	int len = strlen(pFlight->sourceCode);
+	int len = (int)strlen(pFlight->sourceCode);
 	if (fwrite(&len, sizeof(int), 1, f) != 1)
 		return 0;
 	if (fwrite(pFlight->sourceCode, sizeof(char), len, f) != len)
@@ -122,7 +122,27 @@ int saveFlightToFile(FILE* f, Flight* pFlight)
 	if (!saveDateToFile(f, &pFlight->date))
 	{
 		fclose(f);
-		return;
+		return 0;
 	}
+	return 1;
+}
+
+int readFlightFromFile(FILE* f, Flight* pFlight)
+{
+	int len;
+	if (fread(&len, sizeof(int), 1, f) != 1)
+		return 0;
+	if (fread(pFlight->sourceCode, sizeof(char), len, f) != len)
+	{
+		free(pFlight->sourceCode);
+		return 0;
+	}
+	if (fread(pFlight->destCode, sizeof(char), len, f) != len)
+	{
+		free(pFlight->sourceCode);
+		free(pFlight->destCode);
+		return 0;
+	}
+	
 	return 1;
 }

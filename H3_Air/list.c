@@ -74,7 +74,7 @@ BOOL L_delete(NODE* pNode, void (*freeFunc)(void*))
 //			a value to be found
 // Output:	pointer to the node containing the Value
 /////////////////////////////////////////////////////////
-const NODE* L_find(const NODE* pNode, DATA value, int(*compare)(const void*, const void*))
+const NODE* L_find(const NODE* pNode, const DATA value, int(*compare)(const void*, const void*))
 {
 	const NODE* temp = NULL;
 	if (!pNode) return NULL;

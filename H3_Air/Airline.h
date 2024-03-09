@@ -3,6 +3,8 @@
 
 #include "Flight.h"
 #include "AirportManager.h"
+#include "Airport.h"
+#include "General.h"
 
 typedef enum {
 	eNotSorted, eSortedBySourceCode, eSortedByDestCode, eSortedByDate, eNofSortTypes
@@ -39,8 +41,6 @@ void sortBySourceCode(Airline* pComp);
 void sortByDestCode(Airline* pComp);
 void sortByDate(Airline* pComp);
 void findFlight(const Airline* pComp);
-int initAirlineFromFile(Airline* pComp, AirportManager* pManager, const char* fileName);
-void saveAirlineToFile(const Airline* pComp, char* fileName);
 
 #endif
 

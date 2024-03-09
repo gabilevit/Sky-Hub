@@ -116,6 +116,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions);_CRT_SECURE_NO_WARNINGS</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <DisableSpecificWarnings>4996</DisableSpecificWarnings>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -140,6 +141,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="Airline.h" />
+    <ClInclude Include="airlineFile.h" />
     <ClInclude Include="Airport.h" />
     <ClInclude Include="AirportManager.h" />
     <ClInclude Include="Date.h" />
@@ -151,6 +153,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Airline.c" />
+    <ClCompile Include="airlineFile.c" />
     <ClCompile Include="Airport.c" />
     <ClCompile Include="AirportManager.c" />
     <ClCompile Include="Date.c" />

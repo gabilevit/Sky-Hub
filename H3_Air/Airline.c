@@ -3,8 +3,6 @@
 #include <string.h>
 #include <ctype.h>
 #include "Airline.h"
-#include "Airport.h"
-#include "General.h"
 
 void	initAirline(Airline* pComp)
 {
@@ -82,10 +80,10 @@ void printCompany(const Airline* pComp)
 {
 	printf("Airline %s\n", pComp->name);
 	printf("\n -------- Has %d planes\n", pComp->planeCount);
-	generalArrayFunction(pComp->planeArr, pComp->planeCount, sizeof(Plane), printPlane);
+	generalArrayFunction(pComp->planeArr, pComp->planeCount, sizeof(Plane), (void*)printPlane);
 	//printPlanesArr(pComp->planeArr, pComp->planeCount);
 	printf("\n\n -------- Has %d flights\n", pComp->flightCount);
-	generalArrayFunction(*(pComp->flightArr), pComp->flightCount, sizeof(Flight), printFlight);
+	generalArrayFunction(*(pComp->flightArr), pComp->flightCount, sizeof(Flight), (void*)printFlight);
 	//printFlightArr(pComp->flightArr, pComp->flightCount);
 }
 
@@ -196,12 +194,12 @@ void sortByDate(Airline* pComp)
 	qsort(pComp->flightArr, pComp->flightCount, sizeof(Flight*), compareFlightByDate);
 }
 
-void findFlight(Airline* pComp)
+void findFlight(const Airline* pComp)
 {
 	int type = pComp->type;
 	Flight* pFli = NULL;
 	Flight temp;
-	
+
 	switch (type)
 	{
 	case eNotSorted:
@@ -249,87 +247,3 @@ void findFlight(Airline* pComp)
 	}
 }
 
-void saveAirlineToFile(const Airline* pComp, char* fileName)
-{
-	FILE* f = fopen(fileName, "wb");
-	if (!f)
-		return;
-
-	int len = strlen(pComp->name) + 1;
-	if (fwrite(&len, sizeof(int), 1, f) != 1)
-	{
-		fclose(f);
-		return;
-	}
-	if (fwrite(pComp->name, sizeof(char), len, f) != len)
-	{
-		fclose(f);
-		return;
-	}
-	if (fwrite(&pComp->planeCount, sizeof(int), 1, f) != 1)
-	{
-		fclose(f);
-		return;
-	}
-	for (int i = 0; i < pComp->planeCount; i++)
-	{
-		if (!savePlaneToFile(f, &pComp->planeArr[i]))
-		{
-			fclose(f);
-			return;
-		}
-	}
-	if (fwrite(&pComp->flightCount, sizeof(int), 1, f) != 1)
-	{
-		fclose(f);
-		return;
-	}
-	for (int i = 0; i < pComp->flightCount; i++)
-	{
-		if (!saveFlightToFile(f, &pComp->flightArr[i]))
-		{
-			fclose(f);
-			return;
-		}
-	}
-	fclose(f);
-}
-
-int initAirlineFromFile(Airline* pComp, AirportManager* pManager, const char* fileName)
-{
-	FILE* f = fopen(fileName, "r");
-	if (f == NULL)
-	{
-		printf("Failed opening the file. Exiting!\n");
-		return 0;
-	}
-	char tempName[MAX_STR_LEN] = { 0 };
-	if (fscanf(f, "%s %d", tempName, pComp->planeCount) != 2)
-	{
-		fclose(f);
-		return 0;
-	}	
-	pComp->name = _strdup(tempName);
-	if (!pComp->name)
-	{
-		fclose(f);
-		return 0;
-	}
-
-
-	Airport* pPort = (Airport*)calloc(1, sizeof(Airport));
-	if (!pPort)
-		return 2;
-	NODE* pNode = pManager->airportsList.head.next;
-
-	if (!pNode)
-		return 2;
-
-	while (readAirportFromTextFile(f, pPort))
-	{
-		L_insert(pNode, pPort);
-		pNode = pNode->next;
-	}
-	fclose(f);
-	return 1;
-}

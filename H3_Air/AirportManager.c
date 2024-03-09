@@ -87,7 +87,7 @@ int  initAirport(Airport* pPort, AirportManager* pManager)
 
 Airport* findAirportByCode(const AirportManager* pManager, const char* code)
 {
-	const NODE* pRes = L_find(pManager->airportsList.head.next, code, isNOTAirportCode);
+	const NODE* pRes = L_find(pManager->airportsList.head.next, (void*)code, (void*)isNOTAirportCode);
 	if (pRes)
 	{
 		return pRes->key;
@@ -134,7 +134,7 @@ void	printAirports(const AirportManager* pManager)
 	}*/
 }
 
-int countAirports(AirportManager* pManager)
+int countAirports(const AirportManager* pManager)
 {
 	int count = 0;
 	NODE* pNode = pManager->airportsList.head.next;
@@ -163,14 +163,13 @@ void	freeAirportArr(AirportManager* pManager)
 
 	if (!pNode)
 		return;
-
-	while (!pNode)
+	while (pNode)
 	{
 		freeAirport(pNode->key);
 		free(pNode->key);
 		pNode = pNode->next;
 	}
-	L_free(&pManager->airportsList, free);
+	//L_free(&pManager->airportsList, free);
 	/*for (int i = 0; i < pManager->airportsCount; i++)
 	{
 		freeAirport(pManager->airportsArray[i]);
@@ -188,7 +187,7 @@ int saveManagerToFile(const AirportManager* pManager, const char* fileName)
 		return 0;
 	}
 	int size = countAirports(pManager);
-	fprintf(f, "%d", size);
+	fprintf(f, "%d\n", size);
 	NODE* pNode = pManager->airportsList.head.next;
 
 	if (!pNode)
@@ -204,32 +203,32 @@ int saveManagerToFile(const AirportManager* pManager, const char* fileName)
 	return 1;
 }
 
-int readManagerFromFile(const AirportManager* pManager, const char* fileName)
+int readManagerFromFile(AirportManager* pManager, const char* fileName)
 {
 	FILE* f = fopen(fileName, "r");
 	if (f == NULL)
 	{
 		printf("Failed opening the file. Exiting!\n");
-		return 2;
+		return 0;
 	}
-	int size = countAirports(pManager);
-	if (fscanf(f, "%d", &size) != 1)
+	int size;
+	if (fscanf(f, "%d\n", &size) != 1)
 	{
 		fclose(f);
-		return 2;
+		return 0;
 	}
 	Airport* pPort = (Airport*)calloc(1, sizeof(Airport));
 	if (!pPort)
-		return 2;
-	NODE* pNode = pManager->airportsList.head.next;
-
-	if (!pNode)
-		return 2;
+		return 0;
+	NODE* pNode = &pManager->airportsList.head;
 
 	while (readAirportFromTextFile(f, pPort))
 	{
 		L_insert(pNode, pPort);
 		pNode = pNode->next;
+		pPort = (Airport*)calloc(1, sizeof(Airport));
+		if (!pPort)
+			return 0;
 	}
 	fclose(f);
 	return 1;

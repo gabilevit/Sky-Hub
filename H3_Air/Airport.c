@@ -181,9 +181,9 @@ void	freeAirport(Airport* pPort)
 
 void writeAirportToTextFile(FILE* f, Airport* pPort)
 {
-	fprintf(f, "%s", pPort->name);
-	fprintf(f, "%s", pPort->country);
-	fprintf(f, "%s", pPort->code);
+	fprintf(f, "%s\n", pPort->name);
+	fprintf(f, "%s\n", pPort->country);
+	fprintf(f, "%s\n", pPort->code);
 }
 
 int readAirportFromTextFile(FILE* f, Airport* pPort)
@@ -191,10 +191,14 @@ int readAirportFromTextFile(FILE* f, Airport* pPort)
 	char tempName[MAX_STR_LEN] = { 0 };
 	char tempCountry[MAX_STR_LEN] = { 0 };
 	char tempCode[IATA_LENGTH + 1] = { 0 };
-	if (fscanf(f, "%s %s %s", tempName, tempCountry, tempCode) != 3)
+	if (fscanf(f, "%[^\n]s", tempName) != 1)
 		return 0;
-	pPort->name = _strdup(tempName);
-	pPort->country = _strdup(tempCountry);
+	if (fscanf(f, "%s\n", tempCountry) != 1)
+		return 0;
+	if (fscanf(f, "%s\n", tempCode) != 1)
+		return 0;
+	pPort->name = strdup(tempName);
+	pPort->country = strdup(tempCountry);
 	 strcpy(pPort->code, tempCode);
 	if (!pPort->name)
 		return 0;

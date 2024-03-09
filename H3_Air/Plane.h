@@ -28,4 +28,5 @@ void			printPlane(const Plane* pPlane);
 void			freePlane(Plane* pPlane);
 
 int savePlaneToFile(FILE* f, Plane* pPlane);
+int readPlaneFromFile(FILE* f, Plane* pPlane);
 
