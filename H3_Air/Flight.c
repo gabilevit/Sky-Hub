@@ -13,7 +13,7 @@ void	initFlight(Flight* pFlight, Plane* thePlane, const AirportManager* pManager
 	int same;
 	Airport* pPortDes;
 	do {
-		pPortDes = setAiportToFlight(pManager, "Enter code of destination airport:");
+			pPortDes = setAiportToFlight(pManager, "Enter code of destination airport:");
 		same = isSameAirport(pPortOr, pPortDes);
 		if (same)
 			printf("Same origin and destination airport\n");
@@ -48,12 +48,13 @@ int		isPlaneTypeInFlight(const Flight* pFlight, ePlaneType type)
 }
 
 
-void	printFlight(const Flight* pFlight)
+void	printFlight(const Flight** pFlight)
 {
-	printf("Flight From %s To %s\t", pFlight->sourceCode, pFlight->destCode);
-	printDate(&pFlight->date);
+	Flight* tmpF = *(pFlight);
+	printf("Flight From %s To %s\t", tmpF->sourceCode, tmpF->destCode);
+	printDate(&tmpF->date);
 	printf("\t");
-	printPlane(&pFlight->flightPlane);
+	printPlane(&tmpF->flightPlane);
 }
 
 Airport* setAiportToFlight(const AirportManager* pManager, const char* msg)
@@ -129,20 +130,30 @@ int saveFlightToFile(FILE* f, Flight* pFlight)
 
 int readFlightFromFile(FILE* f, Flight* pFlight)
 {
-	int len;
-	if (fread(&len, sizeof(int), 1, f) != 1)
-		return 0;
-	if (fread(pFlight->sourceCode, sizeof(char), len, f) != len)
+	for (int i = 0; i < IATA_LENGTH; i++)
 	{
-		free(pFlight->sourceCode);
-		return 0;
+		if (fread(&pFlight->sourceCode[i], sizeof(char), 1, f) != 1)
+		{
+			free(pFlight->sourceCode);
+			return 0;
+		}
 	}
-	if (fread(pFlight->destCode, sizeof(char), len, f) != len)
+	pFlight->sourceCode[IATA_LENGTH] = '\0';
+	for (int i = 0; i < IATA_LENGTH; i++)
 	{
-		free(pFlight->sourceCode);
-		free(pFlight->destCode);
-		return 0;
+		if (fread(&pFlight->destCode[i], sizeof(char), 1, f) != 1)
+		{
+			free(pFlight->sourceCode);
+			free(pFlight->destCode);
+			return 0;
+		}
 	}
-	
+	pFlight->destCode[IATA_LENGTH] = '\0';
 	return 1;
 }
+
+void freeFlight(Flight* pFlight)
+{
+	free(pFlight);
+}
+

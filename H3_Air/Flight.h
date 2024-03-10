@@ -27,6 +27,7 @@ int compareFlightByDate(const void* pF1, const void* pF2);
 
 int saveFlightToFile(FILE* f, Flight* pFlight);
 int readFlightFromFile(FILE* f, Flight* pFlight);
+void freeFlight(Flight* pFlight);
 
 
 #endif

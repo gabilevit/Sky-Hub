@@ -24,6 +24,7 @@ int initAirlineFromFile(Airline* pComp, AirportManager* pManager, const char* fi
 		fclose(f);
 		return 0;
 	}
+	pComp->planeArr = (Plane*)malloc(pComp->planeCount * sizeof(Plane));
 	for (int i = 0; i < pComp->planeCount; i++)
 	{
 		if (!readPlaneFromFile(f, &pComp->planeArr[i]))
@@ -38,8 +39,15 @@ int initAirlineFromFile(Airline* pComp, AirportManager* pManager, const char* fi
 		fclose(f);
 		return 0;
 	}
+	pComp->flightArr = (Flight**)malloc(pComp->flightCount * sizeof(Flight*));
+	if (!pComp->flightArr)
+	{
+		return 0;
+	}
+		
 	for (int i = 0; i < pComp->flightCount; i++)
 	{
+		pComp->flightArr[i] = (Flight*)malloc(pComp->flightCount * sizeof(Flight));
 		if (!readFlightFromFile(f, pComp->flightArr[i]))
 		{
 			generalArrayFunction(pComp->flightArr, pComp->planeCount, sizeof(Plane), free);
@@ -62,6 +70,7 @@ int initAirlineFromFile(Airline* pComp, AirportManager* pManager, const char* fi
 			return 0;
 		}
 	}
+	pComp->type = eNotSorted;
 	fclose(f);
 	return 1;
 }

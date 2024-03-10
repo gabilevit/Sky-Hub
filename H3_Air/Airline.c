@@ -83,7 +83,7 @@ void printCompany(const Airline* pComp)
 	generalArrayFunction(pComp->planeArr, pComp->planeCount, sizeof(Plane), (void*)printPlane);
 	//printPlanesArr(pComp->planeArr, pComp->planeCount);
 	printf("\n\n -------- Has %d flights\n", pComp->flightCount);
-	generalArrayFunction(*(pComp->flightArr), pComp->flightCount, sizeof(Flight), (void*)printFlight);
+	generalArrayFunction(pComp->flightArr, pComp->flightCount, sizeof(Flight*), (void*)printFlight);
 	//printFlightArr(pComp->flightArr, pComp->flightCount);
 }
 
@@ -132,8 +132,8 @@ void	freePlanes(Plane* arr, int size)
 void	freeCompany(Airline* pComp)
 {
 	//freeFlightArr(pComp->flightArr, pComp->flightCount);
-	generalArrayFunction(pComp->planeArr, pComp->planeCount, sizeof(Plane), free);
-	generalArrayFunction(pComp->flightArr, pComp->flightCount, sizeof(Flight*), free);
+	//generalArrayFunction(pComp->planeArr, pComp->planeCount, sizeof(Plane), free);
+	//generalArrayFunction(pComp->flightArr, pComp->flightCount, sizeof(Flight*), free);
 	free(pComp->flightArr);
 	free(pComp->planeArr);
 	free(pComp->name);
@@ -209,7 +209,7 @@ void findFlight(const Airline* pComp)
 	case eSortedBySourceCode:
 		getAirportCode(temp.sourceCode);
 		pFli = &temp;
-		pFli = *((Flight**)bsearch(&pFli, pComp->flightArr, pComp->flightCount, sizeof(Flight*), compareFlightBySourceCode));
+		pFli = (Flight**)bsearch(&pFli, pComp->flightArr, pComp->flightCount, sizeof(Flight*), compareFlightBySourceCode);
 		if (!pFli)
 			printf("Flight was not found\n");
 		else {
@@ -221,7 +221,7 @@ void findFlight(const Airline* pComp)
 	case eSortedByDestCode:
 		getAirportCode(temp.destCode);
 		pFli = &temp;
-		pFli = *((Flight**)bsearch(&pFli, pComp->flightArr, pComp->flightCount, sizeof(Flight*), compareFlightByDestCode));
+		pFli = (Flight**)bsearch(&pFli, pComp->flightArr, pComp->flightCount, sizeof(Flight*), compareFlightByDestCode);
 		if (!pFli)
 			printf("Flight was not found\n");
 		else {
@@ -233,7 +233,7 @@ void findFlight(const Airline* pComp)
 	case eSortedByDate:
 		getCorrectDate(&temp.date);
 		pFli = &temp;
-		pFli = *((Flight**)bsearch(&pFli, pComp->flightArr, pComp->flightCount, sizeof(Flight*), compareFlightByDate));
+		pFli = (Flight**)bsearch(&pFli, pComp->flightArr, pComp->flightCount, sizeof(Flight*), compareFlightByDate);
 		if (!pFli)
 			printf("Flight was not found\n");
 		else {

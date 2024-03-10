@@ -1,6 +1,17 @@
 ﻿  Airline.c
-  Flight.c
+C:\Users\gabil\Desktop\Portfolio\C\Sky-Hub\H3_Air\Airline.c(212,116): warning C4047: '=': 'Flight *' differs in levels of indirection from 'Flight **'
+C:\Users\gabil\Desktop\Portfolio\C\Sky-Hub\H3_Air\Airline.c(224,114): warning C4047: '=': 'Flight *' differs in levels of indirection from 'Flight **'
+C:\Users\gabil\Desktop\Portfolio\C\Sky-Hub\H3_Air\Airline.c(236,110): warning C4047: '=': 'Flight *' differs in levels of indirection from 'Flight **'
   airlineFile.c
+  Airport.c
+  AirportManager.c
+  Date.c
+  Flight.c
+C:\Users\gabil\Desktop\Portfolio\C\Sky-Hub\H3_Air\Flight.c(51,33): warning C4028: formal parameter 1 different from declaration
+C:\Users\gabil\Desktop\Portfolio\C\Sky-Hub\H3_Air\Flight.c(53,1): warning C4090: 'initializing': different 'const' qualifiers
+  General.c
+  list.c
   main.c
+  Plane.c
   Generating Code...
   H3_Air.vcxproj -> C:\Users\gabil\Desktop\Portfolio\C\Sky-Hub\x64\Debug\H3_Air.exe
